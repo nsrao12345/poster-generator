@@ -131,12 +131,8 @@ button.download {
     border-radius: 6px;
 }
 
-/* ✅ MOBILE-FIRST UX FIX */
+/* MOBILE UX FIX */
 @media (max-width: 768px) {
-
-    body {
-        padding: 12px;
-    }
 
     .container {
         flex-direction: column;
@@ -145,7 +141,6 @@ button.download {
 
     .controls {
         width: 100%;
-        max-width: none;
     }
 
     .poster-wrapper {
@@ -187,7 +182,9 @@ button.download {
     <textarea rows="5" id="messageInput" oninput="message.innerText=this.value"></textarea>
 
     <input type="file" accept="image/*" onchange="loadPhoto(event)">
+
     <button class="download" onclick="downloadPoster()">Download Poster</button>
+    <button class="download" onclick="shareWhatsApp()">Share on WhatsApp</button>
 </div>
 
 <div class="poster-wrapper">
@@ -261,10 +258,31 @@ function loadPhoto(event) {
 
 function downloadPoster() {
     html2canvas(document.getElementById("poster")).then(canvas => {
-        let link = document.createElement("a");
+        const link = document.createElement("a");
         link.download = "celebration_poster.png";
         link.href = canvas.toDataURL();
         link.click();
+    });
+}
+
+/* ✅ WHATSAPP SHARE */
+function shareWhatsApp() {
+    const poster = document.getElementById("poster");
+
+    html2canvas(poster).then(canvas => {
+        canvas.toBlob(blob => {
+            const file = new File([blob], "poster.png", { type: "image/png" });
+
+            if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                navigator.share({
+                    files: [file],
+                    title: "Celebration Poster",
+                    text: "Sharing celebration poster"
+                });
+            } else {
+                alert("Direct WhatsApp share is not supported on this device. Please download and share manually.");
+            }
+        });
     });
 }
 
