@@ -1,265 +1,495 @@
 <!DOCTYPE html>
 <html lang="hi">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Celebration Poster Generator</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Premium Pateshwar Yuva Seva Samiti Poster Generator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Devanagari:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        :root {
+            --primary-dark: #7a1010;
+            --gold: #d4af37;
+            --bg-light: #fdfbf7;
+            --text-dark: #333333;
+            --whatsapp-green: #25D366;
+        }
 
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Devanagari:wght@400;600;700&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+        body {
+            font-family: 'Noto Serif Devanagari', serif;
+            background: #e9ecef;
+            margin: 0;
+            padding: 20px;
+            color: var(--text-dark);
+            box-sizing: border-box;
+        }
 
-<style>
-body {
-    font-family: 'Noto Serif Devanagari', serif;
-    background: #f2f2f2;
-    margin: 0;
-    padding: 16px;
-}
+        /* --- MOBILE-FIRST RESPONSIVE LAYOUT --- */
+        .container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            max-width: 1000px;
+            margin: 0 auto;
+            align-items: center;
+        }
 
-.container {
-    display: flex;
-    gap: 20px;
-    align-items: flex-start;
-}
+        @media (min-width: 800px) {
+            .container {
+                flex-direction: row;
+                align-items: flex-start;
+                justify-content: center;
+            }
+        }
 
-/* CONTROLS */
-.controls {
-    width: 320px;
-    background: #ffffff;
-    padding: 16px;
-    border-radius: 10px;
-}
+        /* --- MODERN CONTROLS --- */
+        .controls {
+            width: 100%;
+            max-width: 360px;
+            background: #ffffff;
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+            border-top: 5px solid var(--primary-dark);
+            box-sizing: border-box;
+        }
 
-.controls input,
-.controls textarea,
-.controls select,
-.controls button {
-    width: 100%;
-    margin-bottom: 12px;
-    padding: 12px;
-    font-size: 16px;
-}
+        .controls h2 {
+            margin-top: 0;
+            font-size: 20px;
+            color: var(--primary-dark);
+            margin-bottom: 20px;
+            text-align: center;
+        }
 
-/* POSTER WRAPPER */
-.poster-wrapper {
-    padding: 16px;
-    border-radius: 18px;
-    background: linear-gradient(135deg, #c83a2b, #f1a15c);
-}
+        .input-group {
+            margin-bottom: 15px;
+        }
 
-/* POSTER */
-.poster {
-    width: 380px;
-    padding: 16px;
-    border: 6px solid #7b3f00;
-    background-color: #fff5df;
+        .input-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: #555;
+        }
 
-    /* 🎈🎊 Rich SVG background */
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Ccircle cx='35' cy='35' r='14' fill='%23f87171'/%3E%3Ccircle cx='145' cy='40' r='13' fill='%2360a5fa'/%3E%3Ccircle cx='90' cy='80' r='15' fill='%23facc15'/%3E%3Ccircle cx='40' cy='135' r='14' fill='%2334d399'/%3E%3Ccircle cx='150' cy='130' r='13' fill='%23fb7185'/%3E%3Ccircle cx='95' cy='150' r='12' fill='%238b5cf6'/%3E%3Cline x1='35' y1='49' x2='35' y2='70' stroke='%239ca3af' stroke-width='1'/%3E%3Cline x1='145' y1='53' x2='145' y2='72' stroke='%239ca3af' stroke-width='1'/%3E%3Cline x1='90' y1='95' x2='90' y2='118' stroke='%239ca3af' stroke-width='1'/%3E%3Cline x1='40' y1='149' x2='40' y2='170' stroke='%239ca3af' stroke-width='1'/%3E%3Cline x1='150' y1='144' x2='150' y2='165' stroke='%239ca3af' stroke-width='1'/%3E%3Cline x1='95' y1='162' x2='95' y2='178' stroke='%239ca3af' stroke-width='1'/%3E%3Ccircle cx='15' cy='15' r='2' fill='%23facc15'/%3E%3Ccircle cx='60' cy='20' r='2' fill='%2360a5fa'/%3E%3Ccircle cx='120' cy='15' r='2' fill='%23fb7185'/%3E%3Ccircle cx='165' cy='25' r='2' fill='%2334d399'/%3E%3Ccircle cx='20' cy='90' r='2' fill='%238b5cf6'/%3E%3Ccircle cx='70' cy='100' r='2' fill='%23f87171'/%3E%3Ccircle cx='120' cy='95' r='2' fill='%2360a5fa'/%3E%3Ccircle cx='165' cy='85' r='2' fill='%23facc15'/%3E%3Ccircle cx='25' cy='165' r='2' fill='%2334d399'/%3E%3Ccircle cx='65' cy='155' r='2' fill='%23fb7185'/%3E%3Ccircle cx='125' cy='160' r='2' fill='%238b5cf6'/%3E%3Ccircle cx='165' cy='150' r='2' fill='%23f87171'/%3E%3C/svg%3E");
-    background-repeat: repeat;
-    background-size: 180px 180px;
-}
+        .controls input, .controls textarea, .controls select {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 10px 12px;
+            font-size: 15px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            transition: border-color 0.3s, box-shadow 0.3s;
+            font-family: inherit;
+        }
 
-/* HEADER */
-.poster-header {
-    display: grid;
-    grid-template-columns: 70px 1fr 70px;
-    grid-template-rows: auto auto;
-    align-items: center;
-    row-gap: 6px;
-    margin-bottom: -60px;
-}
+        .controls input:focus, .controls textarea:focus, .controls select:focus {
+            border-color: var(--gold);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.2);
+        }
 
-.header-text {
-    grid-column: 2;
-    grid-row: 1 / span 2;
-    align-self: start;
-    padding-top: 6px;
-    text-align: center;
-    color: #8a0000;
-    font-weight: 700;
-    line-height: 1.2;
-}
+        .button-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 20px;
+        }
 
-.header-text .ganesh { font-size: 16px; }
-.header-text .samiti { font-size: 20px; }
-.header-text .place { font-size: 14px; }
+        .btn {
+            width: 100%;
+            color: #ffffff;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            padding: 14px 10px;
+            border-radius: 6px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            text-align: center;
+            box-sizing: border-box;
+        }
 
-.header-img {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    border: 3px solid #c89b3c;
-    object-fit: cover;
-    background: #ffffff;
-}
+        .btn:hover {
+            transform: translateY(-2px);
+        }
 
-.header-img.left.top { grid-column: 1; grid-row: 1; }
-.header-img.left.bottom { grid-column: 1; grid-row: 2; }
-.header-img.right.top { grid-column: 3; grid-row: 1; }
-.header-img.right.bottom { grid-column: 3; grid-row: 2; }
+        .btn-download {
+            background: linear-gradient(135deg, var(--primary-dark), #a31818);
+        }
 
-/* CONTENT */
-.amount {
-    text-align: center;
-    font-size: 24px;
-    font-weight: 700;
-    color: #8a0000;
-    margin: 0 0 6px;
-}
+        .btn-download:hover {
+            box-shadow: 0 6px 16px rgba(122, 16, 16, 0.3);
+        }
 
-.date {
-    text-align: center;
-    font-weight: 600;
-    margin-bottom: 8px;
-}
+        .btn-whatsapp {
+            background-color: var(--whatsapp-green);
+        }
 
-.content {
-    font-size: 15px;
-    line-height: 1.6;
-    text-align: center;
-    background: rgba(255,245,223,0.92);
-    padding: 10px;
-    border-radius: 8px;
-}
+        .btn-whatsapp:hover {
+            box-shadow: 0 6px 16px rgba(37, 211, 102, 0.3);
+        }
 
-.photo {
-    margin-top: 12px;
-    text-align: center;
-}
+        /* --- POSTER WRAPPER & THEME --- */
+        .poster-wrapper {
+            width: 100%;
+            max-width: 440px;
+            padding: 15px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #e6b981 0%, #c98835 100%);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            box-sizing: border-box;
+        }
 
-.photo img {
-    width: 180px;
-    height: 220px;
-    object-fit: cover;
-    border: 4px solid #7b3f00;
-    border-radius: 12px;
-    background: #ffffff;
-}
+        .poster {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 24px 20px;
+            background-color: var(--bg-light);
+            border: 2px solid var(--primary-dark);
+            outline: 6px solid var(--gold);
+            outline-offset: -8px;
+            position: relative;
+            
+            /* SVG Festive Balloons & Confetti Background */
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='600' opacity='0.12'%3E%3C!-- Red Balloon --%3E%3Cg transform='translate(15, 40)'%3E%3Cellipse cx='20' cy='25' rx='18' ry='24' fill='%23d63031' /%3E%3Cpolygon points='20,48 15,55 25,55' fill='%23d63031' /%3E%3Cpath d='M20,55 Q10,80 25,105' stroke='%23333' fill='none' stroke-width='1.5' /%3E%3C/g%3E%3C!-- Gold Balloon --%3E%3Cg transform='translate(330, 90)'%3E%3Cellipse cx='20' cy='25' rx='16' ry='22' fill='%23f39c12' /%3E%3Cpolygon points='20,46 15,53 25,53' fill='%23f39c12' /%3E%3Cpath d='M20,53 Q30,78 15,103' stroke='%23333' fill='none' stroke-width='1.5' /%3E%3C/g%3E%3C!-- Green Balloon --%3E%3Cg transform='translate(25, 430)'%3E%3Cellipse cx='20' cy='25' rx='15' ry='20' fill='%2327ae60' /%3E%3Cpolygon points='20,44 15,50 25,50' fill='%2327ae60' /%3E%3Cpath d='M20,50 Q10,75 25,100' stroke='%23333' fill='none' stroke-width='1.5' /%3E%3C/g%3E%3C!-- Blue Balloon --%3E%3Cg transform='translate(325, 410)'%3E%3Cellipse cx='20' cy='25' rx='17' ry='23' fill='%232980b9' /%3E%3Cpolygon points='20,47 15,54 25,54' fill='%232980b9' /%3E%3Cpath d='M20,54 Q30,79 15,104' stroke='%23333' fill='none' stroke-width='1.5' /%3E%3C/g%3E%3C!-- Confetti --%3E%3Cpath d='M100,160 L110,170 M200,80 L190,90 M300,210 L310,200 M80,310 L90,320 M350,300 L340,310 M150,420 L160,410 M250,520 L240,510' stroke='%23e74c3c' stroke-width='4' stroke-linecap='round' stroke-dasharray='1,15' /%3E%3Cpath d='M160,110 L170,120 M260,150 L250,160 M120,260 L130,250 M280,260 L270,270 M100,470 L110,480 M310,460 L300,470' stroke='%23f1c40f' stroke-width='5' stroke-linecap='round' stroke-dasharray='1,15' /%3E%3C/svg%3E");
+            background-size: cover;
+            background-position: center;
+        }
 
-.footer {
-    font-size: 13px;
-    margin-top: 10px;
-    text-align: center;
-    color: #5a2a00;
-    font-weight: 600;
-    background: rgba(255,245,223,0.9);
-    padding: 6px;
-    border-radius: 6px;
-}
+        /* --- POSTER HEADER --- */
+        .poster-header {
+            position: relative;
+            text-align: center;
+            margin-bottom: 15px;
+            padding: 0 45px; 
+        }
 
-button.download {
-    background: #7b0000;
-    color: #ffffff;
-    border: none;
-    cursor: pointer;
-    font-size: 16px;
-    border-radius: 6px;
-}
+        .header-text {
+            color: var(--primary-dark);
+            line-height: 1.3;
+        }
 
-/* MOBILE */
-@media (max-width: 768px) {
-    .container { flex-direction: column; }
-    .controls { width: 100%; }
-    .poster-wrapper { display: flex; justify-content: center; }
-    .poster { width: 100%; max-width: 420px; }
-}
-</style>
+        .header-text .ganesh { font-size: 16px; font-weight: 600; color: #b30000; }
+        .header-text .samiti { font-size: 24px; font-weight: 700; text-shadow: 1px 1px 0px rgba(0,0,0,0.1); margin: 4px 0; }
+        .header-text .place { font-size: 16px; font-weight: 600; color: #555; }
+
+        .header-img {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 2px solid var(--gold);
+            object-fit: cover;
+            background: #fff;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+
+        .header-img.left.top { top: -10px; left: -10px; }
+        .header-img.left.bottom { top: 50px; left: -10px; }
+        .header-img.right.top { top: -10px; right: -10px; }
+        .header-img.right.bottom { top: 50px; right: -10px; }
+
+        /* --- POSTER CONTENT --- */
+        .date {
+            text-align: center;
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--primary-dark);
+            margin-bottom: 12px;
+            background: rgba(255, 255, 255, 0.6);
+            display: inline-block;
+            padding: 2px 10px;
+            border-radius: 4px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .amount-box {
+            background: rgba(212, 175, 55, 0.15);
+            border: 1px dashed var(--gold);
+            text-align: center;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+        }
+
+        .amount-box .amount {
+            font-size: 26px;
+            font-weight: 700;
+            color: var(--primary-dark);
+            margin: 0;
+        }
+
+        .content {
+            font-size: 16px;
+            line-height: 1.6;
+            text-align: justify;
+            text-align-last: center;
+            background: rgba(255, 255, 255, 0.88);
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.03);
+            font-weight: 500;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* --- PERMANENT PHOTO FRAME --- */
+        .photo-container {
+            margin-top: 16px;
+            text-align: center;
+        }
+
+        .photo-frame {
+            position: relative;
+            width: 150px;
+            height: 190px;
+            margin: 0 auto;
+            border: 3px solid var(--gold);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .photo-placeholder-text {
+            color: #888;
+            font-size: 14px;
+            font-weight: 600;
+            text-align: center;
+            line-height: 1.4;
+            z-index: 1;
+        }
+
+        .photo-frame img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 2;
+            /* Using a transparent 1x1 pixel so it's technically loaded but invisible */
+            background-color: transparent;
+        }
+
+        .footer {
+            font-size: 12px;
+            margin-top: 20px;
+            text-align: center;
+            color: #888;
+            border-top: 1px solid rgba(212, 175, 55, 0.4);
+            padding-top: 8px;
+            position: relative;
+            z-index: 1;
+        }
+    </style>
 </head>
-
 <body>
 
 <div class="container">
+    <div class="controls">
+        <h2>पोस्टर बनाएं</h2>
+        
+        <div class="input-group">
+            <label>अवसर चुनें (Event Type)</label>
+            <select id="templateType" onchange="changeTemplate(this.value)">
+                <option value="self">स्वयं का जन्मदिन (Own Birthday)</option>
+                <option value="son">पुत्र का जन्मदिन (Son's Birthday)</option>
+                <option value="daughter">पुत्री का जन्मदिन (Daughter's Birthday)</option>
+                <option value="anniversary">वैवाहिक वर्षगांठ (Anniversary)</option>
+                <option value="custom">अन्य (Custom)</option>
+            </select>
+        </div>
 
-<div class="controls">
-    <select onchange="changeTemplate(this.value)">
-        <option value="self">Own Birthday</option>
-        <option value="father">Child Birthday</option>
-        <option value="anniversary">Anniversary</option>
-        <option value="custom">Custom</option>
-    </select>
+        <div class="input-group">
+            <label id="labelName1">मुख्य नाम (Primary Name)</label>
+            <input id="name1" placeholder="उदा. रमेश कुमार" oninput="updateMessage()">
+        </div>
 
-    <input id="name1" value="Name1" oninput="updateMessage()">
-    <input id="name2" value="Name2" oninput="updateMessage()">
-    <input value="501" oninput="amount.innerText=this.value; updateMessage()">
-    <input type="date" value="" oninput="date.innerText=this.value.split('-').reverse().join('-')">
-    <textarea id="messageInput" rows="5" oninput="message.innerText=this.value"></textarea>
-    <input type="file" accept="image/*" onchange="photo.src=URL.createObjectURL(event.target.files[0])">
-    <button class="download" onclick="downloadPoster()">Download Poster</button>
-</div>
+        <div class="input-group" id="name2Group" style="display: none;">
+            <label id="labelName2">दूसरा नाम (Secondary Name)</label>
+            <input id="name2" placeholder="उदा. सुरेश" oninput="updateMessage()">
+        </div>
 
-<div class="poster-wrapper">
-<div class="poster" id="poster">
+        <div class="input-group">
+            <label>समर्पण राशि (Amount - ₹)</label>
+            <input type="number" id="inputAmount" value="501" oninput="document.getElementById('displayAmount').innerText=this.value; updateMessage()">
+        </div>
 
-<div class="poster-header">
-    <img src="header1.png" class="header-img left top">
-    <img src="header3.png" class="header-img left bottom">
-    <div class="header-text">
-        <div class="ganesh">श्री गणेशाय नमः</div>
-        <div class="samiti">पाटेश्वर युवा सेवा समिति</div>
-        <div class="place">ठि. पटली</div>
+        <div class="input-group">
+            <label>दिनांक (Date)</label>
+            <input type="date" id="inputDate" onchange="updateDate(this.value)">
+        </div>
+
+        <div class="input-group">
+            <label>संदेश (Message)</label>
+            <textarea id="messageInput" rows="5" oninput="document.getElementById('messageDisplay').innerText=this.value"></textarea>
+        </div>
+
+        <div class="input-group">
+            <label>फोटो अपलोड करें (Upload Photo)</label>
+            <input type="file" accept="image/*" onchange="handlePhotoUpload(event)">
+        </div>
+
+        <div class="button-group">
+            <button class="btn btn-download" onclick="downloadPoster()">↓ पोस्टर डाउनलोड करें</button>
+            <button class="btn btn-whatsapp" onclick="shareWhatsApp()">Copy & WhatsApp →</button>
+        </div>
     </div>
-    <img src="header2.png" class="header-img right top">
-    <img src="header4.png" class="header-img right bottom">
-</div>
 
-<div class="amount">समर्पण राशि: ₹ <span id="amount">501</span></div>
-<div class="date">दिनांक: <span id="date">19-02-2026</span></div>
-<div class="content" id="message"></div>
-<div class="photo"><img id="photo"></div>
-<div class="footer">© 2026, Design by NsRao</div>
+    <div class="poster-wrapper">
+        <div class="poster" id="poster">
+            
+            <div class="poster-header">
+                <img src="header1.png" class="header-img left top" alt="">
+                <img src="header3.png" class="header-img left bottom" alt="">
+                
+                <div class="header-text">
+                    <div class="ganesh">॥ श्री गणेशाय नमः ॥</div>
+                    <div class="samiti">पाटेश्वर युवा सेवा समिति</div>
+                    <div class="place">ठि. पटली</div>
+                </div>
+                
+                <img src="header2.png" class="header-img right top" alt="">
+                <img src="header4.png" class="header-img right bottom" alt="">
+            </div>
 
-</div>
-</div>
+            <div class="date">दिनांक: <span id="displayDate"></span></div>
 
+            <div class="amount-box">
+                <div class="amount">समर्पण राशि: ₹ <span id="displayAmount">501</span></div>
+            </div>
+            
+            <div class="content" id="messageDisplay"></div>
+            
+            <div class="photo-container">
+                <div class="photo-frame">
+                    <div class="photo-placeholder-text">फोटो स्थान<br>(Photo Area)</div>
+                    <img id="displayPhoto" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=" alt="Upload">
+                </div>
+            </div>
+            
+            <div class="footer">© 2026, Design by NsRao</div>
+        </div>
+    </div>
 </div>
 
 <script>
-let currentTemplate = "self";
+    let currentTemplate = "self";
 
-function changeTemplate(t) {
-    currentTemplate = t;
-    name2.style.display = (t === "self") ? "none" : "block";
-    updateMessage();
-}
+    window.onload = () => {
+        const today = new Date();
+        const yyyy = today.getFullYear();
+        const mm = String(today.getMonth() + 1).padStart(2, '0');
+        const dd = String(today.getDate()).padStart(2, '0');
+        
+        const formattedDate = `${yyyy}-${mm}-${dd}`;
+        document.getElementById("inputDate").value = formattedDate;
+        updateDate(formattedDate);
+        changeTemplate('self');
+    };
 
-function updateMessage() {
-    const n1 = name1.value;
-    const n2 = name2.value;
-    const amt = amount.innerText;
-    let text = "";
-
-    if (currentTemplate === "self") {
-        text = `श्री ${n1} ने अपने जन्मदिन के शुभ अवसर पर पाटेश्वर युवा सेवा समिति, ठि. पटली को ${amt} रुपये का आर्थिक सहयोग प्रदान किया। इस अवसर पर श्री ${n1} को जन्मदिन की हार्दिक बधाई एवं शुभकामनाएं।`;
+    function updateDate(dateStr) {
+        if(!dateStr) return;
+        const parts = dateStr.split('-');
+        document.getElementById("displayDate").innerText = `${parts[2]}-${parts[1]}-${parts[0]}`;
     }
 
-    if (currentTemplate === "father") {
-        text = `श्री ${n1} ने अपने सुपुत्र ${n2} के जन्मदिन के शुभ अवसर पर पाटेश्वर युवा सेवा समिति, ठि. पटली को ${amt} रुपये का आर्थिक सहयोग प्रदान किया। इस अवसर पर ${n2} को जन्मदिन की हार्दिक बधाई एवं शुभकामनाएं।`;
+    function changeTemplate(t) {
+        currentTemplate = t;
+        const name2Group = document.getElementById("name2Group");
+        const labelName1 = document.getElementById("labelName1");
+        const labelName2 = document.getElementById("labelName2");
+
+        if (t === "self") {
+            name2Group.style.display = "none";
+            labelName1.innerText = "व्यक्ति का नाम (Name)";
+        } else if (t === "son") {
+            name2Group.style.display = "block";
+            labelName1.innerText = "पिता/माता का नाम (Parent's Name)";
+            labelName2.innerText = "पुत्र का नाम (Son's Name)";
+        } else if (t === "daughter") {
+            name2Group.style.display = "block";
+            labelName1.innerText = "पिता/माता का नाम (Parent's Name)";
+            labelName2.innerText = "पुत्री का नाम (Daughter's Name)";
+        } else if (t === "anniversary") {
+            name2Group.style.display = "block";
+            labelName1.innerText = "पति का नाम (Husband's Name)";
+            labelName2.innerText = "पत्नी का नाम (Wife's Name)";
+        } else {
+            name2Group.style.display = "none";
+            labelName1.innerText = "नाम (Name)";
+        }
+        updateMessage();
     }
 
-    if (currentTemplate === "anniversary") {
-        text = `श्री ${n1} एवं श्रीमती ${n2} ने अपनी वैवाहिक वर्षगांठ के शुभ अवसर पर पाटेश्वर युवा सेवा समिति, ठि. पटली को ${amt} रुपये का आर्थिक सहयोग प्रदान किया। इस अवसर पर दोनों को वैवाहिक वर्षगांठ की हार्दिक बधाई एवं शुभकामनाएं।`;
+    function updateMessage() {
+        const n1 = document.getElementById("name1").value || "[नाम 1]";
+        const n2 = document.getElementById("name2").value || "[नाम 2]";
+        const amt = document.getElementById("displayAmount").innerText;
+        let text = "";
+
+        if (currentTemplate === "self") {
+            text = `श्री ${n1} ने अपने जन्मदिन के शुभ अवसर पर पाटेश्वर युवा सेवा समिति, ठि. पटली को ${amt} रुपये का आर्थिक सहयोग प्रदान किया। इस अवसर पर श्री ${n1} को जन्मदिन की हार्दिक बधाई एवं शुभकामनाएं।`;
+        } else if (currentTemplate === "son") {
+            text = `श्री ${n1} ने अपने सुपुत्र ${n2} के जन्मदिन के शुभ अवसर पर पाटेश्वर युवा सेवा समिति, ठि. पटली को ${amt} रुपये का आर्थिक सहयोग प्रदान किया। इस अवसर पर ${n2} को जन्मदिन की हार्दिक बधाई एवं शुभकामनाएं।`;
+        } else if (currentTemplate === "daughter") {
+            text = `श्री ${n1} ने अपनी सुपुत्री ${n2} के जन्मदिन के शुभ अवसर पर पाटेश्वर युवा सेवा समिति, ठि. पटली को ${amt} रुपये का आर्थिक सहयोग प्रदान किया। इस अवसर पर ${n2} को जन्मदिन की हार्दिक बधाई एवं शुभकामनाएं।`;
+        } else if (currentTemplate === "anniversary") {
+            text = `श्री ${n1} एवं श्रीमती ${n2} ने अपनी वैवाहिक वर्षगांठ के शुभ अवसर पर पाटेश्वर युवा सेवा समिति, ठि. पटली को ${amt} रुपये का आर्थिक सहयोग प्रदान किया। इस अवसर पर दोनों को वैवाहिक वर्षगांठ की हार्दिक बधाई एवं शुभकामनाएं।`;
+        } else if (currentTemplate === "custom") {
+            text = document.getElementById("messageInput").value;
+        }
+
+        document.getElementById("messageDisplay").innerText = text;
+        
+        if(currentTemplate !== "custom") {
+            document.getElementById("messageInput").value = text;
+        }
     }
 
-    if (currentTemplate === "custom") {
-        text = messageInput.value;
+    function handlePhotoUpload(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const img = document.getElementById("displayPhoto");
+            img.src = URL.createObjectURL(file);
+        }
     }
 
-    message.innerText = text;
-    messageInput.value = text;
-}
+    function downloadPoster() {
+        html2canvas(document.getElementById("poster"), {
+            scale: 2, 
+            useCORS: true 
+        }).then(canvas => {
+            const link = document.createElement("a");
+            link.download = "Pateshwar_Samiti_Poster.png";
+            link.href = canvas.toDataURL("image/png");
+            link.click();
+        });
+    }
 
-function downloadPoster() {
-    html2canvas(document.getElementById("poster")).then(c => {
-        const a = document.createElement("a");
-        a.download = "poster.png";
-        a.href = c.toDataURL();
-        a.click();
-    });
-}
-
-changeTemplate("self");
+    function shareWhatsApp() {
+        const contentMessage = document.getElementById("messageDisplay").innerText;
+        const amountText = document.getElementById("displayAmount").innerText;
+        const dateText = document.getElementById("displayDate").innerText;
+        
+        const textToShare = `✅ पाटेश्वर युवा सेवा समिति, ठि. पटली\n\n---------------------\n\n${contentMessage}\n\n समर्पण राशि: ₹ ${amountText}\n दिनांक: ${dateText}\n\n---------------------\n© 2026, Design by NsRao`;
+        
+        navigator.clipboard.writeText(textToShare).then(() => {
+            alert('संदेश कॉपी कर लिया गया है! \n(Message copied! WhatsApp will now open.)');
+            window.open('whatsapp://send?text=New Donation Poster From Pateshwar Samiti', '_blank');
+        }).catch(err => {
+            console.error('Failed to copy: ', err);
+            alert('Error copying text.');
+        });
+    }
 </script>
-
 </body>
 </html>
