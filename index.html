@@ -12,7 +12,6 @@
             --gold: #d4af37;
             --bg-light: #fdfbf7;
             --text-dark: #333333;
-            --whatsapp-green: #25D366;
         }
 
         body {
@@ -124,14 +123,6 @@
             box-shadow: 0 6px 16px rgba(122, 16, 16, 0.3);
         }
 
-        .btn-whatsapp {
-            background-color: var(--whatsapp-green);
-        }
-
-        .btn-whatsapp:hover {
-            box-shadow: 0 6px 16px rgba(37, 211, 102, 0.3);
-        }
-
         /* --- POSTER WRAPPER & THEME --- */
         .poster-wrapper {
             width: 100%;
@@ -153,7 +144,7 @@
             outline-offset: -8px;
             position: relative;
             
-            /* High-Density Rich SVG Festive Balloons & Confetti Background (html2canvas safe) */
+            /* High-Density Rich SVG Festive Balloons & Confetti Background */
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cg opacity='0.15'%3E%3C!-- 6 Balloons --%3E%3Cg transform='translate(20, 30)'%3E%3Cellipse cx='0' cy='0' rx='14' ry='18' fill='%23e74c3c'/%3E%3Cpolygon points='-3,17 3,17 0,22' fill='%23e74c3c'/%3E%3Cpath d='M0,22 Q-5,40 5,60' stroke='%23333' fill='none' stroke-width='0.5'/%3E%3C/g%3E%3Cg transform='translate(150, 40)'%3E%3Cellipse cx='0' cy='0' rx='12' ry='16' fill='%233498db'/%3E%3Cpolygon points='-2,15 2,15 0,19' fill='%233498db'/%3E%3Cpath d='M0,19 Q5,35 -5,55' stroke='%23333' fill='none' stroke-width='0.5'/%3E%3C/g%3E%3Cg transform='translate(80, 120)'%3E%3Cellipse cx='0' cy='0' rx='15' ry='20' fill='%232ecc71'/%3E%3Cpolygon points='-3,19 3,19 0,24' fill='%232ecc71'/%3E%3Cpath d='M0,24 Q5,45 -5,65' stroke='%23333' fill='none' stroke-width='0.5'/%3E%3C/g%3E%3Cg transform='translate(170, 150)'%3E%3Cellipse cx='0' cy='0' rx='13' ry='17' fill='%23f1c40f'/%3E%3Cpolygon points='-2,16 2,16 0,20' fill='%23f1c40f'/%3E%3Cpath d='M0,20 Q-5,35 5,50' stroke='%23333' fill='none' stroke-width='0.5'/%3E%3C/g%3E%3Cg transform='translate(30, 160)'%3E%3Cellipse cx='0' cy='0' rx='12' ry='16' fill='%239b59b6'/%3E%3Cpolygon points='-2,15 2,15 0,19' fill='%239b59b6'/%3E%3Cpath d='M0,19 Q5,35 -5,55' stroke='%23333' fill='none' stroke-width='0.5'/%3E%3C/g%3E%3Cg transform='translate(110, 20)'%3E%3Cellipse cx='0' cy='0' rx='14' ry='18' fill='%23e67e22'/%3E%3Cpolygon points='-3,17 3,17 0,22' fill='%23e67e22'/%3E%3Cpath d='M0,22 Q-5,40 5,60' stroke='%23333' fill='none' stroke-width='0.5'/%3E%3C/g%3E%3C!-- 12 Confetti Dots --%3E%3Ccircle cx='50' cy='50' r='2' fill='%23f1c40f'/%3E%3Ccircle cx='180' cy='20' r='1.5' fill='%23e74c3c'/%3E%3Ccircle cx='90' cy='70' r='2' fill='%239b59b6'/%3E%3Ccircle cx='130' cy='100' r='1.5' fill='%232ecc71'/%3E%3Ccircle cx='20' cy='110' r='2' fill='%233498db'/%3E%3Ccircle cx='190' cy='110' r='1.5' fill='%23e67e22'/%3E%3Ccircle cx='60' cy='180' r='2' fill='%23e74c3c'/%3E%3Ccircle cx='140' cy='180' r='1.5' fill='%23f1c40f'/%3E%3Ccircle cx='10' cy='10' r='1.5' fill='%232ecc71'/%3E%3Ccircle cx='100' cy='150' r='2' fill='%233498db'/%3E%3Ccircle cx='160' cy='80' r='1.5' fill='%239b59b6'/%3E%3Ccircle cx='70' cy='10' r='2' fill='%23e67e22'/%3E%3C/g%3E%3C/svg%3E");
             background-size: 200px 200px;
             background-repeat: repeat;
@@ -339,7 +330,6 @@
 
         <div class="button-group">
             <button class="btn btn-download" onclick="downloadPoster()">↓ पोस्टर डाउनलोड करें</button>
-            <button class="btn btn-whatsapp" onclick="shareWhatsApp()">Copy & WhatsApp →</button>
         </div>
     </div>
 
@@ -477,23 +467,6 @@
             link.download = "Pateshwar_Samiti_Poster.png";
             link.href = canvas.toDataURL("image/png");
             link.click();
-        });
-    }
-
-    /* --- EXACT WORKING WHATSAPP FUNCTION FROM YOUR CODE --- */
-    function shareWhatsApp() {
-        const contentMessage = document.getElementById("messageDisplay").innerText;
-        const amountText = document.getElementById("displayAmount").innerText;
-        const dateText = document.getElementById("displayDate").innerText;
-        
-        const textToShare = `✅ पाटेश्वर युवा सेवा समिति, ठि. पटली\n\n---------------------\n\n${contentMessage}\n\n समर्पण राशि: ₹ ${amountText}\n दिनांक: ${dateText}\n\n---------------------\n© 2026, Design by NsRao`;
-        
-        navigator.clipboard.writeText(textToShare).then(() => {
-            alert('संदेश कॉपी कर लिया गया है! \n(Message copied! WhatsApp will now open.)');
-            window.open('whatsapp://send?text=New Donation Poster From Pateshwar Samiti', '_blank');
-        }).catch(err => {
-            console.error('Failed to copy: ', err);
-            alert('Error copying text.');
         });
     }
 </script>
