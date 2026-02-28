@@ -340,7 +340,7 @@
 
         <div class="button-group">
             <button class="btn btn-download" onclick="downloadPoster()">↓ पोस्टर डाउनलोड करें</button>
-            <button class="btn btn-whatsapp" id="whatsappBtn" onclick="shareWhatsApp()">Share on WhatsApp →</button>
+            <button class="btn btn-whatsapp" onclick="shareWhatsApp()">Copy & WhatsApp →</button>
         </div>
     </div>
 
@@ -410,7 +410,9 @@
         const messageGroup = document.getElementById("messageGroup");
 
         // Hide message group by default, show only if 'custom' is selected
-        messageGroup.style.display = (t === "custom") ? "block" : "none";
+        if (messageGroup) {
+            messageGroup.style.display = (t === "custom") ? "block" : "none";
+        }
 
         if (t === "self") {
             name2Group.style.display = "none";
@@ -480,48 +482,18 @@
     }
 
     function shareWhatsApp() {
-        const btn = document.getElementById("whatsappBtn");
-        const originalText = btn.innerText;
-        btn.innerText = "Preparing Image...";
-
         const contentMessage = document.getElementById("messageDisplay").innerText;
         const amountText = document.getElementById("displayAmount").innerText;
         const dateText = document.getElementById("displayDate").innerText;
         
         const textToShare = `✅ पाटेश्वर युवा सेवा समिति, ठि. पटली\n\n---------------------\n\n${contentMessage}\n\n समर्पण राशि: ₹ ${amountText}\n दिनांक: ${dateText}\n\n---------------------\n© 2026, Design by NsRao`;
         
-        // Generate the image canvas
-        html2canvas(document.getElementById("poster"), {
-            scale: 2,
-            useCORS: true
-        }).then(canvas => {
-            // Convert canvas to a Blob (file data)
-            canvas.toBlob(function(blob) {
-                const file = new File([blob], "Pateshwar_Samiti_Poster.png", { type: "image/png" });
-                
-                // Set up the share data with both the text and the image file
-                const shareData = {
-                    title: 'Pateshwar Samiti Poster',
-                    text: textToShare,
-                    files: [file]
-                };
-
-                // Check if the browser supports sharing files natively
-                if (navigator.canShare && navigator.canShare({ files: [file] })) {
-                    navigator.share(shareData)
-                        .then(() => {
-                            btn.innerText = originalText;
-                        })
-                        .catch((error) => {
-                            btn.innerText = originalText;
-                            console.log('Sharing canceled or failed:', error);
-                        });
-                } else {
-                    // Fallback for older browsers or PC browsers that don't support file sharing
-                    btn.innerText = originalText;
-                    alert("आपका ब्राउज़र सीधे फोटो शेयर करने का सपोर्ट नहीं करता। कृपया पहले 'पोस्टर डाउनलोड करें' बटन दबाएं और फिर उसे गैलरी से WhatsApp पर शेयर करें।\n\n(Direct image sharing isn't supported on this browser. Please download the poster first to share.)");
-                }
-            }, 'image/png');
+        navigator.clipboard.writeText(textToShare).then(() => {
+            alert('संदेश कॉपी कर लिया गया है! \n(Message copied! WhatsApp will now open.)');
+            window.open('whatsapp://send?text=New Donation Poster From Pateshwar Samiti', '_blank');
+        }).catch(err => {
+            console.error('Failed to copy: ', err);
+            alert('Error copying text.');
         });
     }
 </script>
