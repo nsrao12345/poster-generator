@@ -409,7 +409,6 @@
         const labelName2 = document.getElementById("labelName2");
         const messageGroup = document.getElementById("messageGroup");
 
-        // Hide message group by default, show only if 'custom' is selected
         if (messageGroup) {
             messageGroup.style.display = (t === "custom") ? "block" : "none";
         }
@@ -469,15 +468,33 @@
         }
     }
 
+    // --- BULLETPROOF MOBILE DOWNLOAD FIX (Blob Method) ---
     function downloadPoster() {
         html2canvas(document.getElementById("poster"), {
             scale: 2, 
             useCORS: true 
         }).then(canvas => {
-            const link = document.createElement("a");
-            link.download = "Pateshwar_Samiti_Poster.png";
-            link.href = canvas.toDataURL("image/png");
-            link.click();
+            // Convert canvas to a proper file blob for mobile support
+            canvas.toBlob(function(blob) {
+                const url = window.URL.createObjectURL(blob);
+                const link = document.createElement("a");
+                link.style.display = "none";
+                link.href = url;
+                link.download = "Pateshwar_Samiti_Poster.png";
+                
+                // Must append to body for mobile browsers to recognize the click
+                document.body.appendChild(link);
+                link.click();
+                
+                // Clean up memory
+                setTimeout(() => {
+                    document.body.removeChild(link);
+                    window.URL.revokeObjectURL(url);
+                }, 100);
+            }, 'image/png');
+        }).catch(err => {
+            console.error("Canvas error:", err);
+            alert("Something went wrong. Please take a screenshot instead.");
         });
     }
 
@@ -499,3 +516,4 @@
 </script>
 </body>
 </html>
+
