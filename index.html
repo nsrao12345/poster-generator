@@ -88,7 +88,6 @@
             width: 100%;
             max-width: 800px; 
             box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-            /* Removed the overflow-scroll, JS handles the scaling now */
             position: relative;
             background: #2a2a2a;
         }
@@ -104,7 +103,7 @@
             outline-offset: -16px;
             overflow: hidden;
             z-index: 1;
-            transform-origin: top left; /* Crucial for mobile scaling */
+            transform-origin: top left;
         }
 
         /* ======================================================= */
@@ -389,17 +388,15 @@
 <script>
     let currentTemplate = "self";
 
-    // --- NEW: Dynamic Mobile Scaling Logic ---
+    // --- Dynamic Mobile Scaling Logic ---
     function scalePosterForMobile() {
         const wrapper = document.querySelector('.poster-wrapper');
         const poster = document.getElementById('poster');
         const wrapperWidth = wrapper.clientWidth;
 
-        // If the screen/wrapper is smaller than the 800px poster, scale it down visually
         if (wrapperWidth < 800 && wrapperWidth > 0) {
             const scaleFactor = wrapperWidth / 800;
             poster.style.transform = `scale(${scaleFactor})`;
-            // Adjust the wrapper height so it doesn't leave empty blank space below the scaled poster
             wrapper.style.height = `${1130 * scaleFactor}px`; 
         } else {
             poster.style.transform = 'none';
@@ -407,7 +404,6 @@
         }
     }
 
-    // Run scaling on load and whenever the screen is flipped/resized
     window.addEventListener('resize', scalePosterForMobile);
     
     window.onload = () => {
@@ -496,52 +492,73 @@
         }
     }
 
-    // --- IPHONE COMPATIBLE DOWNLOAD SCRIPT ---
+    // --- BULLETPROOF IPHONE & ANDROID EXPORT SCRIPT ---
     function downloadPoster() {
         const btn = document.getElementById("downloadBtn");
         const originalText = btn.innerText;
         
-        btn.innerText = "⏳ Generating... Please wait";
+        btn.innerText = "⏳ Generating Poster...";
         btn.disabled = true;
 
         setTimeout(() => {
             const posterElement = document.getElementById("poster");
             
             html2canvas(posterElement, {
-                scale: 2, // Keeps HD quality
-                useCORS: true, // Fixes local image loading
-                // Removed allowTaint to prevent iOS SecurityError blocks
+                scale: 2, 
+                useCORS: true, 
                 onclone: function (clonedDoc) {
-                    // Temporarily remove the mobile scaling during capture so output is 100% full resolution
                     const clonedPoster = clonedDoc.getElementById('poster');
                     clonedPoster.style.transform = 'none';
                 }
             }).then(canvas => {
-                // Convert to Blob instead of dataURL (Prevents Safari memory crash on large images)
                 canvas.toBlob(function(blob) {
-                    const url = URL.createObjectURL(blob);
-                    const link = document.createElement("a");
-                    link.download = "Pateshwar_Samiti_Poster.png";
-                    link.href = url;
                     
-                    document.body.appendChild(link);
-                    link.click();
-                    document.body.removeChild(link);
+                    const file = new File([blob], "Pateshwar_Poster.png", { type: "image/png" });
+
+                    // IOS FIX: Native Web Share API
+                    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                        navigator.share({
+                            files: [file],
+                            title: 'Pateshwar Samiti Poster',
+                        })
+                        .then(() => {
+                            btn.innerText = originalText;
+                            btn.disabled = false;
+                        })
+                        .catch((error) => {
+                            console.log("Share sheet closed or failed:", error);
+                            forceStandardDownload(blob);
+                            btn.innerText = originalText;
+                            btn.disabled = false;
+                        });
+                    } else {
+                        // ANDROID / PC FALLBACK
+                        forceStandardDownload(blob);
+                        btn.innerText = originalText;
+                        btn.disabled = false;
+                    }
                     
-                    // Clean up memory
-                    URL.revokeObjectURL(url);
-                    
-                    btn.innerText = originalText;
-                    btn.disabled = false;
                 }, 'image/png');
                 
             }).catch(error => {
-                console.error("Error generating image:", error);
-                alert("Sorry, an error occurred while downloading.");
+                console.error("Canvas Error:", error);
+                alert("Generation failed. Please ensure your images are in the same folder.");
                 btn.innerText = originalText;
                 btn.disabled = false;
             });
-        }, 200);
+        }, 150); 
+    }
+
+    // Standard download logic
+    function forceStandardDownload(blob) {
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.download = "Pateshwar_Samiti_Poster.png";
+        link.href = url;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        setTimeout(() => URL.revokeObjectURL(url), 100);
     }
 </script>
 </body>
