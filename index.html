@@ -348,8 +348,8 @@
             <div class="scallop-v scallop-right"></div>
             
             <div class="poster-header">
-                <img src="header1.png" class="header-img left top" alt="">
-                <img src="header3.png" class="header-img left bottom" alt="">
+                <img src="header1.png" crossorigin="anonymous" class="header-img left top" alt="">
+                <img src="header3.png" crossorigin="anonymous" class="header-img left bottom" alt="">
                 
                 <div class="header-text">
                     <div class="ganesh">॥ श्री गणेशाय नमः ॥</div>
@@ -357,8 +357,8 @@
                     <div class="samiti">ठि. पटली</div>
                 </div>
                 
-                <img src="header2.png" class="header-img right top" alt="">
-                <img src="header4.png" class="header-img right bottom" alt="">
+                <img src="header2.png" crossorigin="anonymous" class="header-img right top" alt="">
+                <img src="header4.png" crossorigin="anonymous" class="header-img right bottom" alt="">
             </div>
 
             <div class="scallop-trim"></div>
@@ -373,12 +373,12 @@
                 <div class="photo-container">
                     <div class="photo-frame">
                         <div class="photo-placeholder-text">फोटो स्थान<br>(Photo Area)</div>
-                        <img id="displayPhoto" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=" alt="Upload">
+                        <img id="displayPhoto" crossorigin="anonymous" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=" alt="Upload">
                     </div>
                 </div>
             </div>
 
-            <img src="footer-gifts.png" class="bottom-gifts" alt="Gifts and Balloons">
+            <img src="footer-gifts.png" crossorigin="anonymous" class="bottom-gifts" alt="Gifts and Balloons">
             
             <div class="footer">© 2026, Design by NsRao</div>
         </div>
@@ -484,7 +484,6 @@
         }
     }
 
-    // --- IPHONE FIX: Use Base64 FileReader instead of Blob URLs ---
     function handlePhotoUpload(event) {
         const file = event.target.files[0];
         if (file) {
@@ -496,7 +495,7 @@
         }
     }
 
-    // --- STANDARD DOWNLOAD SCRIPT (No Share API) ---
+    // --- THE FINAL IPHONE FIX ---
     function downloadPoster() {
         const btn = document.getElementById("downloadBtn");
         const originalText = btn.innerText;
@@ -505,36 +504,54 @@
         btn.disabled = true;
 
         const posterElement = document.getElementById("poster");
+        const wrapperElement = document.querySelector('.poster-wrapper');
         
-        html2canvas(posterElement, {
-            scale: 2, 
-            useCORS: true, 
-            backgroundColor: "#fdfbf7",
-            onclone: function (clonedDoc) {
-                const clonedPoster = clonedDoc.getElementById('poster');
-                clonedPoster.style.transform = 'none';
-            }
-        }).then(canvas => {
-            // Using standard DataURL for highest browser compatibility 
-            const imgData = canvas.toDataURL("image/png");
-            
-            const link = document.createElement("a");
-            link.href = imgData;
-            link.download = "Pateshwar_Samiti_Poster.png";
-            
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            
-            btn.innerText = originalText;
-            btn.disabled = false;
-            
-        }).catch(error => {
-            console.error("Canvas Error:", error);
-            alert("Generation failed! Please refresh the page and try again.");
-            btn.innerText = originalText;
-            btn.disabled = false;
-        });
+        // 1. Save original states
+        const originalTransform = posterElement.style.transform;
+        const originalHeight = wrapperElement.style.height;
+
+        // 2. UN-SCALE the live DOM to prevent iOS html2canvas crash
+        window.scrollTo(0, 0); 
+        posterElement.style.transform = 'none';
+        wrapperElement.style.height = 'auto';
+
+        // 3. Give the browser 50ms to register the un-scaled DOM before capturing
+        setTimeout(() => {
+            html2canvas(posterElement, {
+                scale: 2, 
+                useCORS: true, 
+                allowTaint: true,
+                backgroundColor: "#fdfbf7"
+            }).then(canvas => {
+                
+                // RESTORE MOBILE SCALE IMMEDIATELY
+                posterElement.style.transform = originalTransform;
+                wrapperElement.style.height = originalHeight;
+
+                const imgData = canvas.toDataURL("image/png");
+                const link = document.createElement("a");
+                link.href = imgData;
+                link.download = "Pateshwar_Samiti_Poster.png";
+                
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                
+                btn.innerText = originalText;
+                btn.disabled = false;
+                
+            }).catch(error => {
+                console.error("Canvas Error:", error);
+                
+                // RESTORE MOBILE SCALE ON ERROR
+                posterElement.style.transform = originalTransform;
+                wrapperElement.style.height = originalHeight;
+                
+                alert("Generation failed! Please ensure your image names match exactly.");
+                btn.innerText = originalText;
+                btn.disabled = false;
+            });
+        }, 50);
     }
 </script>
 </body>
