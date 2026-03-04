@@ -107,7 +107,7 @@
         }
 
         /* ======================================================= */
-        /* BASE64 SCALLOP BORDERS (Fixes iPhone Parser Crash)      */
+        /* FAIL-PROOF SCALLOP BORDERS ON ALL 4 SIDES               */
         /* ======================================================= */
         .scallop-h {
             position: absolute;
@@ -145,7 +145,7 @@
             border-bottom: 5px solid var(--gold-border);
         }
 
-        /* --- BASE64 TRIM BELOW HEADER --- */
+        /* --- TRIM BELOW HEADER --- */
         .scallop-trim {
             position: absolute;
             top: 220px; 
@@ -495,83 +495,63 @@
         }
     }
 
-    // --- OFF-SCREEN CLONE FIX FOR IPHONE ---
+    // --- EXACT CHATGPT FIX IMPLEMENTED FOR IOS ---
     function downloadPoster() {
         const btn = document.getElementById("downloadBtn");
         const originalText = btn.innerText;
-        
         btn.innerText = "⏳ Generating...";
-        btn.disabled = true;
 
-        const originalPoster = document.getElementById("poster");
+        const posterElement = document.getElementById("poster");
 
-        // 1. Create a hidden, unscaled clone (Fixes iPhone DOM transform bug)
-        const cloneContainer = document.createElement("div");
-        cloneContainer.style.position = "fixed";
-        cloneContainer.style.top = "-9999px";
-        cloneContainer.style.left = "-9999px";
-        
-        const clone = originalPoster.cloneNode(true);
-        clone.style.transform = "none"; // Strip scaling completely
-        cloneContainer.appendChild(clone);
-        document.body.appendChild(cloneContainer);
-
-        // 2. Render the off-screen clone
-        html2canvas(clone, {
-            scale: 2, 
+        html2canvas(posterElement, {
+            scale: 2,
             useCORS: true,
-            backgroundColor: "#fdfbf7"
+            allowTaint: true,
+            logging: true,
+            backgroundColor: "#fdfbf7",
+            onclone: function (clonedDoc) {
+                // Ensure the cloned version is captured at full 100% natural scale
+                const clonedPoster = clonedDoc.getElementById('poster');
+                clonedPoster.style.transform = 'none';
+            }
         }).then(canvas => {
-            // Clean up the DOM
-            document.body.removeChild(cloneContainer);
 
             canvas.toBlob(function(blob) {
-                const url = window.URL.createObjectURL(blob);
-                const file = new File([blob], "Pateshwar_Poster.png", { type: "image/png" });
 
-                // STRICTLY target iOS ONLY for Share API (Fixes Windows PC Bug)
-                const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+                const file = new File([blob], "Pateshwar_Samiti_Poster.png", {
+                    type: "image/png"
+                });
 
-                if (isIOS && navigator.canShare && navigator.canShare({ files: [file] })) {
+                // Check for iOS/Mobile Share Support
+                if (navigator.canShare && navigator.canShare({ files: [file] })) {
                     navigator.share({
                         files: [file],
-                        title: 'Pateshwar Samiti Poster',
+                        title: "Pateshwar Samiti Poster"
                     }).then(() => {
-                        resetButton();
+                        btn.innerText = originalText;
                     }).catch((error) => {
-                        // User cancelled share
-                        resetButton();
+                        console.error("Share sheet closed or failed:", error);
+                        btn.innerText = originalText;
                     });
                 } else {
-                    // Standard Direct Download for PC & Android
+                    // Standard Download logic for PC & Android
+                    const url = URL.createObjectURL(blob);
                     const link = document.createElement("a");
                     link.href = url;
                     link.download = "Pateshwar_Samiti_Poster.png";
-                    document.body.appendChild(link);
                     link.click();
-                    document.body.removeChild(link);
                     
-                    setTimeout(() => window.URL.revokeObjectURL(url), 100);
-                    resetButton();
-                }
-
-                function resetButton() {
+                    // Clean up URL to save memory
+                    setTimeout(() => URL.revokeObjectURL(url), 100);
                     btn.innerText = originalText;
-                    btn.disabled = false;
                 }
 
-            }, 'image/png');
-            
+            }, "image/png");
+
         }).catch(error => {
-            // Clean up the DOM on error
-            document.body.removeChild(cloneContainer);
-            console.error("Canvas Error:", error);
-            
-            // This will now output the EXACT technical error string from your iPhone
-            alert("Error: " + error.message);
-            
+            console.error("Canvas generation error:", error);
+            alert("Generation failed! Please refresh the page and try again.");
             btn.innerText = originalText;
-            btn.disabled = false;
         });
     }
 </script>
