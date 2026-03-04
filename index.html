@@ -495,7 +495,7 @@
         }
     }
 
-    // --- THE FINAL IPHONE FIX ---
+    // --- THE HYBRID SMART DOWNLOAD FIX ---
     function downloadPoster() {
         const btn = document.getElementById("downloadBtn");
         const originalText = btn.innerText;
@@ -504,54 +504,64 @@
         btn.disabled = true;
 
         const posterElement = document.getElementById("poster");
-        const wrapperElement = document.querySelector('.poster-wrapper');
         
-        // Save original states
-        const originalTransform = posterElement.style.transform;
-        const originalHeight = wrapperElement.style.height;
+        // 1. We tell html2canvas the EXACT dimensions so we don't have to alter the live DOM (Fixes iPhone Crash)
+        html2canvas(posterElement, {
+            scale: 2, 
+            useCORS: true,
+            backgroundColor: "#fdfbf7",
+            width: 800,
+            height: 1130,
+            windowWidth: 800,
+            windowHeight: 1130
+        }).then(canvas => {
+            
+            canvas.toBlob(function(blob) {
+                
+                const url = window.URL.createObjectURL(blob);
+                const file = new File([blob], "Pateshwar_Poster.png", { type: "image/png" });
 
-        // UN-SCALE the live DOM to prevent iOS html2canvas crash
-        window.scrollTo(0, 0); 
-        posterElement.style.transform = 'none';
-        wrapperElement.style.height = 'auto';
+                // 2. Check if the user is explicitly on a mobile device
+                const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
-        // Give the browser 50ms to register the un-scaled DOM before capturing
-        setTimeout(() => {
-            html2canvas(posterElement, {
-                scale: 2, 
-                useCORS: true, 
-                allowTaint: true,
-                backgroundColor: "#fdfbf7"
-            }).then(canvas => {
-                
-                // RESTORE MOBILE SCALE IMMEDIATELY
-                posterElement.style.transform = originalTransform;
-                wrapperElement.style.height = originalHeight;
+                // 3. If Mobile AND supports share, open the Share Sheet (Fixes iOS async block)
+                if (isMobile && navigator.canShare && navigator.canShare({ files: [file] })) {
+                    navigator.share({
+                        files: [file],
+                        title: 'Pateshwar Samiti Poster',
+                    }).then(() => {
+                        resetButton();
+                    }).catch((error) => {
+                        console.log("User closed share sheet");
+                        resetButton();
+                    });
+                } 
+                // 4. If Desktop (Windows/Mac), force a standard, direct download (Fixes the PC Share Bug)
+                else {
+                    const link = document.createElement("a");
+                    link.href = url;
+                    link.download = "Pateshwar_Samiti_Poster.png";
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    
+                    setTimeout(() => window.URL.revokeObjectURL(url), 100);
+                    resetButton();
+                }
 
-                const imgData = canvas.toDataURL("image/png");
-                const link = document.createElement("a");
-                link.href = imgData;
-                link.download = "Pateshwar_Samiti_Poster.png";
-                
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-                
-                btn.innerText = originalText;
-                btn.disabled = false;
-                
-            }).catch(error => {
-                console.error("Canvas Error:", error);
-                
-                // RESTORE MOBILE SCALE ON ERROR
-                posterElement.style.transform = originalTransform;
-                wrapperElement.style.height = originalHeight;
-                
-                alert("Generation failed! Please ensure your image names match exactly.");
-                btn.innerText = originalText;
-                btn.disabled = false;
-            });
-        }, 50);
+                function resetButton() {
+                    btn.innerText = originalText;
+                    btn.disabled = false;
+                }
+
+            }, 'image/png');
+            
+        }).catch(error => {
+            console.error("Canvas Error:", error);
+            alert("Error: Please check your internet connection and ensure images are loaded.");
+            btn.innerText = originalText;
+            btn.disabled = false;
+        });
     }
 </script>
 </body>
