@@ -107,13 +107,13 @@
         }
 
         /* ======================================================= */
-        /* FAIL-PROOF SCALLOP BORDERS ON ALL 4 SIDES               */
+        /* BASE64 SCALLOP BORDERS (Fixes iPhone Parser Crash)      */
         /* ======================================================= */
         .scallop-h {
             position: absolute;
             width: 100%;
             height: 15px;
-            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='30' height='15'%3E%3Cpath d='M0,0 A15,15 0 0,0 30,0 Z' fill='%23b8860b'/%3E%3C/svg%3E") repeat-x;
+            background: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHdpZHRoPSczMCcgaGVpZ2h0PScxNSc+PHBhdGggZD0nTTAsMCBBMTUsMTUgMCAwLDAgMzAsMCBaJyBmaWxsPScjYjg4NjBiJy8+PC9zdmc+") repeat-x;
             z-index: 10;
             pointer-events: none;
         }
@@ -121,7 +121,7 @@
             position: absolute;
             width: 15px;
             height: 100%;
-            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='15' height='30'%3E%3Cpath d='M0,0 A15,15 0 0,0 0,30 Z' fill='%23b8860b'/%3E%3C/svg%3E") repeat-y;
+            background: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHdpZHRoPScxNScgaGVpZ2h0PSczMCc+PHBhdGggZD0nTTAsMCBBMTUsMTUgMCAwLDAgMCwzMCBaJyBmaWxsPScjYjg4NjBiJy8+PC9zdmc+") repeat-y;
             z-index: 10;
             pointer-events: none;
         }
@@ -145,14 +145,14 @@
             border-bottom: 5px solid var(--gold-border);
         }
 
-        /* --- TRIM BELOW HEADER --- */
+        /* --- BASE64 TRIM BELOW HEADER --- */
         .scallop-trim {
             position: absolute;
             top: 220px; 
             left: 0;
             width: 100%;
             height: 20px;
-            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='30' height='20'%3E%3Cpath d='M0,0 Q15,20 30,0 L30,20 L0,20 Z' fill='%23b8860b'/%3E%3C/svg%3E") repeat-x;
+            background: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHdpZHRoPSczMCcgaGVpZ2h0PScyMCc+PHBhdGggZD0nTTAsMCBRMTUsMjAgMzAsMCBMMzAsMjAgTDAsMjAgWicgZmlsbD0nI2I4ODYwYicvPjwvc3ZnPg==") repeat-x;
             z-index: 4;
             pointer-events: none;
         }
@@ -495,7 +495,7 @@
         }
     }
 
-    // --- THE HYBRID SMART DOWNLOAD FIX ---
+    // --- OFF-SCREEN CLONE FIX FOR IPHONE ---
     function downloadPoster() {
         const btn = document.getElementById("downloadBtn");
         const originalText = btn.innerText;
@@ -503,41 +503,47 @@
         btn.innerText = "⏳ Generating...";
         btn.disabled = true;
 
-        const posterElement = document.getElementById("poster");
+        const originalPoster = document.getElementById("poster");
+
+        // 1. Create a hidden, unscaled clone (Fixes iPhone DOM transform bug)
+        const cloneContainer = document.createElement("div");
+        cloneContainer.style.position = "fixed";
+        cloneContainer.style.top = "-9999px";
+        cloneContainer.style.left = "-9999px";
         
-        // 1. We tell html2canvas the EXACT dimensions so we don't have to alter the live DOM (Fixes iPhone Crash)
-        html2canvas(posterElement, {
+        const clone = originalPoster.cloneNode(true);
+        clone.style.transform = "none"; // Strip scaling completely
+        cloneContainer.appendChild(clone);
+        document.body.appendChild(cloneContainer);
+
+        // 2. Render the off-screen clone
+        html2canvas(clone, {
             scale: 2, 
             useCORS: true,
-            backgroundColor: "#fdfbf7",
-            width: 800,
-            height: 1130,
-            windowWidth: 800,
-            windowHeight: 1130
+            backgroundColor: "#fdfbf7"
         }).then(canvas => {
-            
+            // Clean up the DOM
+            document.body.removeChild(cloneContainer);
+
             canvas.toBlob(function(blob) {
-                
                 const url = window.URL.createObjectURL(blob);
                 const file = new File([blob], "Pateshwar_Poster.png", { type: "image/png" });
 
-                // 2. Check if the user is explicitly on a mobile device
-                const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+                // STRICTLY target iOS ONLY for Share API (Fixes Windows PC Bug)
+                const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
 
-                // 3. If Mobile AND supports share, open the Share Sheet (Fixes iOS async block)
-                if (isMobile && navigator.canShare && navigator.canShare({ files: [file] })) {
+                if (isIOS && navigator.canShare && navigator.canShare({ files: [file] })) {
                     navigator.share({
                         files: [file],
                         title: 'Pateshwar Samiti Poster',
                     }).then(() => {
                         resetButton();
                     }).catch((error) => {
-                        console.log("User closed share sheet");
+                        // User cancelled share
                         resetButton();
                     });
-                } 
-                // 4. If Desktop (Windows/Mac), force a standard, direct download (Fixes the PC Share Bug)
-                else {
+                } else {
+                    // Standard Direct Download for PC & Android
                     const link = document.createElement("a");
                     link.href = url;
                     link.download = "Pateshwar_Samiti_Poster.png";
@@ -557,8 +563,13 @@
             }, 'image/png');
             
         }).catch(error => {
+            // Clean up the DOM on error
+            document.body.removeChild(cloneContainer);
             console.error("Canvas Error:", error);
-            alert("Error: Please check your internet connection and ensure images are loaded.");
+            
+            // This will now output the EXACT technical error string from your iPhone
+            alert("Error: " + error.message);
+            
             btn.innerText = originalText;
             btn.disabled = false;
         });
