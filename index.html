@@ -106,11 +106,14 @@
             transform-origin: top left;
         }
 
+        /* ======================================================= */
+        /* SCALLOP BORDERS ON ALL 4 SIDES                          */
+        /* ======================================================= */
         .scallop-h {
             position: absolute;
             width: 100%;
             height: 15px;
-            background: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMCIgaGVpZ2h0PSIxNSI+PHBhdGggZD0iTTAsMCBBMTUsMTUgMCAwLDAgMzAsMCBaIiBmaWxsPSIjYjg4NjBiIi8+PC9zdmc+") repeat-x;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='30' height='15'%3E%3Cpath d='M0,0 A15,15 0 0,0 30,0 Z' fill='%23b8860b'/%3E%3C/svg%3E") repeat-x;
             z-index: 10;
             pointer-events: none;
         }
@@ -118,7 +121,7 @@
             position: absolute;
             width: 15px;
             height: 100%;
-            background: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNSIgaGVpZ2h0PSIzMCI+PHBhdGggZD0iTTAsMCBBMTUsMTUgMCAwLDAgMCwzMCBaIiBmaWxsPSIjYjg4NjBiIi8+PC9zdmc+") repeat-y;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='15' height='30'%3E%3Cpath d='M0,0 A15,15 0 0,0 0,30 Z' fill='%23b8860b'/%3E%3C/svg%3E") repeat-y;
             z-index: 10;
             pointer-events: none;
         }
@@ -128,6 +131,7 @@
         .scallop-left { top: 0; left: 0; } 
         .scallop-right { top: 0; right: 0; transform: scaleX(-1); } 
 
+        /* --- THE RED HEADER AREA --- */
         .poster-header {
             position: relative;
             background-color: var(--header-red);
@@ -141,17 +145,19 @@
             border-bottom: 5px solid var(--gold-border);
         }
 
+        /* --- TRIM BELOW HEADER --- */
         .scallop-trim {
             position: absolute;
             top: 220px; 
             left: 0;
             width: 100%;
             height: 20px;
-            background: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMCIgaGVpZ2h0PSIyMCI+PHBhdGggZD0iTTAsMCBRMTUsMjAgMzAsMCBMMzAsMjAgTDAsMjAgWiIgZmlsbD0iI2I4ODYwYiIvPjwvc3ZnPg==") repeat-x;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='30' height='20'%3E%3Cpath d='M0,0 Q15,20 30,0 L30,20 L0,20 Z' fill='%23b8860b'/%3E%3C/svg%3E") repeat-x;
             z-index: 4;
             pointer-events: none;
         }
 
+        /* --- HEADER IMAGES 1, 2, 3, 4 --- */
         .header-img {
             position: absolute;
             width: 90px;
@@ -168,6 +174,7 @@
         .header-img.right.top { top: 15px; right: 20px; }
         .header-img.right.bottom { top: 115px; right: 20px; }
 
+        /* Header Text */
         .header-text { 
             text-align: center; 
             z-index: 7; 
@@ -188,6 +195,7 @@
             line-height: 1.1; 
         }
 
+        /* --- POSTER CONTENT AREA --- */
         .content-area {
             position: absolute;
             top: 270px; 
@@ -229,6 +237,7 @@
             text-align: center;
         }
 
+        /* --- PHOTO UPLOAD FRAME --- */
         .photo-container {
             margin-top: 40px;
             display: flex;
@@ -256,6 +265,7 @@
             object-fit: cover; z-index: 2; background-color: transparent;
         }
 
+        /* --- FOOTER GIFTS IMAGE --- */
         .bottom-gifts {
             position: absolute;
             bottom: 20px;
@@ -485,21 +495,16 @@
         }
     }
 
-    // --- THE DIAGNOSTIC DOWNLOAD SCRIPT ---
+    // --- EXACT CHATGPT SOLUTION IMPLEMENTED ---
     function downloadPoster() {
         const btn = document.getElementById("downloadBtn");
         const originalText = btn.innerText;
-
-        // Diagnostic Alert 1
-        alert("System Check 1: Button clicked. Preparing canvas.");
-
         btn.innerText = "⏳ Generating...";
-        btn.disabled = true;
 
         const posterElement = document.getElementById("poster");
         const wrapperElement = document.querySelector('.poster-wrapper');
         
-        // Remove scaling temporarily for clean capture
+        // Remove CSS scaling so html2canvas renders the true 800x1130 size
         const originalTransform = posterElement.style.transform;
         const originalHeight = wrapperElement.style.height;
         posterElement.style.transform = 'none';
@@ -512,60 +517,40 @@
             logging: true,
             backgroundColor: "#fdfbf7"
         }).then(canvas => {
-            // Diagnostic Alert 2
-            alert("System Check 2: Canvas generated successfully! Preparing download.");
-
-            // Restore scaling
+            // Restore UI scale
             posterElement.style.transform = originalTransform;
             wrapperElement.style.height = originalHeight;
 
-            // Use DataURL per ChatGPT suggestion to avoid Blob blocking on older Safari
-            const dataUrl = canvas.toDataURL("image/png");
-
-            // Convert DataURL to Blob for the Web Share API
-            fetch(dataUrl)
-                .then(res => res.blob())
-                .then(blob => {
-                    const file = new File([blob], "Pateshwar_Samiti_Poster.png", { type: "image/png" });
-
-                    // Strict check for iOS Share Capability
-                    if (navigator.canShare && navigator.canShare({ files: [file] })) {
-                        navigator.share({
-                            files: [file],
-                            title: "Pateshwar Samiti Poster"
-                        }).then(() => {
-                            btn.innerText = originalText;
-                            btn.disabled = false;
-                        }).catch((err) => {
-                            console.log("Share cancelled or failed:", err);
-                            btn.innerText = originalText;
-                            btn.disabled = false;
-                        });
-                    } else {
-                        // Standard Download Fallback
-                        const link = document.createElement("a");
-                        link.href = dataUrl;
-                        link.download = "Pateshwar_Samiti_Poster.png";
-                        document.body.appendChild(link);
-                        link.click();
-                        document.body.removeChild(link);
-                        
-                        btn.innerText = originalText;
-                        btn.disabled = false;
-                    }
+            canvas.toBlob(function(blob) {
+                const file = new File([blob], "Pateshwar_Samiti_Poster.png", {
+                    type: "image/png"
                 });
 
+                if (navigator.share) {
+                    navigator.share({
+                        files: [file],
+                        title: "Poster"
+                    }).then(() => {
+                        btn.innerText = originalText;
+                    }).catch((error) => {
+                        console.error("Share sheet closed or failed:", error);
+                        btn.innerText = originalText;
+                    });
+                } else {
+                    const link = document.createElement("a");
+                    link.href = URL.createObjectURL(blob);
+                    link.download = "Pateshwar_Samiti_Poster.png";
+                    link.click();
+                    btn.innerText = originalText;
+                }
+            });
         }).catch(error => {
-            // Restore scaling
+            // Restore UI scale on error
             posterElement.style.transform = originalTransform;
             wrapperElement.style.height = originalHeight;
-
-            // Diagnostic Alert 3
-            console.error("Canvas error:", error);
-            alert("System Check 3 (ERROR): Canvas failed to build. This usually means one of the header images failed to load from GitHub over the mobile network.");
-            
+            console.error("Canvas generation error:", error);
+            alert("Error: Something went wrong generating the image.");
             btn.innerText = originalText;
-            btn.disabled = false;
         });
     }
 </script>
