@@ -20,35 +20,29 @@
             font-family: 'Noto Serif Devanagari', serif;
             background: #2a2a2a; 
             margin: 0;
-            padding: 20px;
+            padding: 10px;
             color: var(--text-dark);
             box-sizing: border-box;
         }
 
-        /* --- RESPONSIVE LAYOUT --- */
         .container {
             display: flex;
             flex-direction: column;
-            gap: 30px;
-            max-width: 1300px;
+            gap: 20px;
+            max-width: 1200px;
             margin: 0 auto;
             align-items: center;
         }
 
         @media (min-width: 1000px) {
-            .container {
-                flex-direction: row;
-                align-items: flex-start;
-                justify-content: center;
-            }
+            .container { flex-direction: row; align-items: flex-start; justify-content: center; }
         }
 
-        /* --- MODERN CONTROLS --- */
         .controls {
             width: 100%;
             max-width: 360px;
             background: #ffffff;
-            padding: 24px;
+            padding: 20px;
             border-radius: 12px;
             box-shadow: 0 8px 24px rgba(0,0,0,0.2);
             border-top: 5px solid var(--primary-dark);
@@ -57,44 +51,30 @@
         }
 
         .controls h2 { margin-top: 0; font-size: 20px; color: var(--primary-dark); margin-bottom: 20px; text-align: center; }
-        .input-group { margin-bottom: 15px; }
-        .input-group label { display: block; font-size: 14px; font-weight: 600; margin-bottom: 6px; color: #555; }
-        
+        .input-group { margin-bottom: 12px; }
+        .input-group label { display: block; font-size: 14px; font-weight: 600; margin-bottom: 4px; color: #555; }
         .controls input, .controls textarea, .controls select {
-            width: 100%; box-sizing: border-box; padding: 10px 12px; font-size: 15px;
-            border: 1px solid #ccc; border-radius: 6px; transition: border-color 0.3s;
-            font-family: inherit;
+            width: 100%; box-sizing: border-box; padding: 10px; border: 1px solid #ccc; border-radius: 6px;
         }
 
-        .controls input:focus, .controls textarea:focus, .controls select:focus {
-            border-color: var(--gold); outline: none; box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.2);
-        }
-
-        .button-group { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; }
-        
         .btn {
             width: 100%; color: #ffffff; border: none; cursor: pointer; font-size: 16px;
-            font-weight: 600; padding: 14px 10px; border-radius: 6px; transition: 0.2s; text-align: center;
+            font-weight: 600; padding: 14px; border-radius: 6px; transition: 0.2s;
+            background: linear-gradient(135deg, var(--primary-dark), #a31818);
         }
-        .btn:hover { transform: translateY(-2px); }
-        .btn:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }
-        .btn-download { background: linear-gradient(135deg, var(--primary-dark), #a31818); }
+        .btn:disabled { opacity: 0.7; }
 
-        /* ======================================================= */
-        /* --- POSTER DESIGN --- */
-        /* ======================================================= */
-        
+        /* --- POSTER DESIGN (9:16 RATIO) --- */
         .poster-wrapper {
             width: 100%;
-            max-width: 800px; 
+            max-width: 450px; 
             box-shadow: 0 20px 50px rgba(0,0,0,0.5);
             position: relative;
-            background: #2a2a2a;
         }
 
         .poster {
             width: 800px; 
-            height: 1130px; 
+            height: 1422px; /* 9:16 Aspect Ratio */
             background-color: var(--cream-bg);
             position: relative;
             box-sizing: border-box;
@@ -102,189 +82,72 @@
             outline: 4px solid var(--header-red);
             outline-offset: -16px;
             overflow: hidden;
-            z-index: 1;
             transform-origin: top left;
         }
 
-        /* ======================================================= */
-        /* BASE64 SCALLOP BORDERS (Fixes iPhone Parser Crash)      */
-        /* ======================================================= */
         .scallop-h {
-            position: absolute;
-            width: 100%;
-            height: 15px;
+            position: absolute; width: 100%; height: 15px;
             background: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHdpZHRoPSczMCcgaGVpZ2h0PScxNSc+PHBhdGggZD0nTTAsMCBBMTUsMTUgMCAwLDAgMzAsMCBaJyBmaWxsPScjYjg4NjBiJy8+PC9zdmc+") repeat-x;
-            z-index: 10;
-            pointer-events: none;
+            z-index: 10; pointer-events: none;
         }
         .scallop-v {
-            position: absolute;
-            width: 15px;
-            height: 100%;
+            position: absolute; width: 15px; height: 100%;
             background: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHdpZHRoPScxNScgaGVpZ2h0PSczMCc+PHBhdGggZD0nTTAsMCBBMTUsMTUgMCAwLDAgMCwzMCBaJyBmaWxsPScjYjg4NjBiJy8+PC9zdmc+") repeat-y;
-            z-index: 10;
-            pointer-events: none;
+            z-index: 10; pointer-events: none;
         }
-        
-        .scallop-top { top: 0; left: 0; } 
-        .scallop-bottom { bottom: 0; left: 0; transform: scaleY(-1); } 
-        .scallop-left { top: 0; left: 0; } 
-        .scallop-right { top: 0; right: 0; transform: scaleX(-1); } 
+        .scallop-top { top: 0; } .scallop-bottom { bottom: 0; transform: scaleY(-1); }
+        .scallop-left { left: 0; } .scallop-right { right: 0; transform: scaleX(-1); }
 
-        /* --- THE RED HEADER AREA --- */
         .poster-header {
-            position: relative;
             background-color: var(--header-red);
-            height: 220px; 
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 15px;
-            box-sizing: border-box;
-            z-index: 5;
+            height: 220px;
+            display: flex; justify-content: center; align-items: center;
             border-bottom: 5px solid var(--gold-border);
+            position: relative; z-index: 5;
         }
 
-        /* --- BASE64 TRIM BELOW HEADER --- */
         .scallop-trim {
-            position: absolute;
-            top: 220px; 
-            left: 0;
-            width: 100%;
-            height: 20px;
+            position: absolute; top: 220px; width: 100%; height: 20px;
             background: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHdpZHRoPSczMCcgaGVpZ2h0PScyMCc+PHBhdGggZD0nTTAsMCBRMTUsMjAgMzAsMCBMMzAsMjAgTDAsMjAgWicgZmlsbD0nI2I4ODYwYicvPjwvc3ZnPg==") repeat-x;
             z-index: 4;
-            pointer-events: none;
         }
 
-        /* --- HEADER IMAGES 1, 2, 3, 4 --- */
         .header-img {
-            position: absolute;
-            width: 90px;
-            height: 90px;
-            border-radius: 50%;
-            border: 4px solid var(--gold);
-            object-fit: cover;
-            background: #fff;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-            z-index: 6;
+            position: absolute; width: 90px; height: 90px; border-radius: 50%;
+            border: 4px solid var(--gold); object-fit: cover; background: #fff;
         }
-        .header-img.left.top { top: 15px; left: 20px; }
-        .header-img.left.bottom { top: 115px; left: 20px; }
-        .header-img.right.top { top: 15px; right: 20px; }
-        .header-img.right.bottom { top: 115px; right: 20px; }
+        .img-lt { top: 15px; left: 20px; } .img-lb { top: 115px; left: 20px; }
+        .img-rt { top: 15px; right: 20px; } .img-rb { top: 115px; right: 20px; }
 
-        /* Header Text */
-        .header-text { 
-            text-align: center; 
-            z-index: 7; 
-            padding-top: 15px; 
-        }
-        .header-text .ganesh { 
-            font-size: 22px; 
-            font-weight: 700; 
-            color: #ffda75; 
-            margin-bottom: 2px; 
-        } 
-        .header-text .samiti { 
-            font-size: 42px; 
-            font-weight: 900; 
-            color: #ffffff; 
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.6); 
-            margin: 0; 
-            line-height: 1.1; 
-        }
+        .header-text { text-align: center; padding-top: 15px; }
+        .header-text .ganesh { font-size: 22px; color: #ffda75; font-weight: 700; margin-bottom: 2px; }
+        .header-text .samiti { font-size: 42px; font-weight: 900; color: #ffffff; text-shadow: 2px 2px 4px rgba(0,0,0,0.6); margin: 0; line-height: 1.1; }
 
-        /* --- POSTER CONTENT AREA --- */
         .content-area {
-            position: absolute;
-            top: 270px; 
-            left: 0;
-            width: 100%;
-            padding: 0 80px;
-            box-sizing: border-box;
-            text-align: center;
-            z-index: 4;
+            position: absolute; top: 270px; width: 100%; text-align: center; padding: 0 60px; box-sizing: border-box;
         }
 
-        .date {
-            display: inline-block;
-            font-size: 20px;
-            font-weight: 700;
-            color: var(--primary-dark);
-            margin-bottom: 25px;
-            border-bottom: 2px solid var(--gold);
-            padding-bottom: 5px;
-        }
+        .date-box { font-size: 20px; font-weight: 700; color: var(--primary-dark); margin-bottom: 20px; }
 
         .amount-box {
-            font-size: 34px;
-            font-weight: 900;
-            color: var(--primary-dark);
-            background: rgba(212, 175, 55, 0.15);
-            border: 2px dashed var(--gold);
-            padding: 15px 40px;
-            border-radius: 12px;
-            display: inline-block;
-            margin-bottom: 30px;
+            font-size: 34px; font-weight: 900; color: var(--primary-dark);
+            background: rgba(212, 175, 55, 0.15); border: 2px dashed var(--gold);
+            padding: 15px 40px; border-radius: 12px; display: inline-block; margin-bottom: 25px;
         }
 
-        .content {
-            font-size: 26px;
-            line-height: 1.8;
-            color: #222;
-            font-weight: 600;
-            text-align: center;
-        }
+        .message { font-size: 26px; line-height: 1.8; font-weight: 600; color: #222; margin-bottom: 30px; }
 
-        /* --- PHOTO UPLOAD FRAME --- */
-        .photo-container {
-            margin-top: 40px;
-            display: flex;
-            justify-content: center;
-        }
-
+        /* BIGGER PHOTO AREA */
+        .photo-container { display: flex; justify-content: center; margin-top: 10px; }
         .photo-frame {
-            position: relative;
-            width: 240px;
-            height: 300px;
-            border: 6px solid var(--gold-border);
-            border-radius: 12px;
-            background: rgba(255, 255, 255, 0.5);
-            overflow: hidden;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            width: 400px; height: 500px; 
+            border: 8px solid var(--gold-border); border-radius: 15px;
+            background: #fff; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.1);
         }
+        .photo-frame img { width: 100%; height: 100%; object-fit: cover; }
 
-        .photo-placeholder-text {
-            position: absolute; width: 100%; top: 40%; text-align: center;
-            color: #888; font-size: 16px; font-weight: 600; z-index: 1;
-        }
-
-        .photo-frame img {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            object-fit: cover; z-index: 2; background-color: transparent;
-        }
-
-        /* --- FOOTER GIFTS IMAGE --- */
-        .bottom-gifts {
-            position: absolute;
-            bottom: 20px;
-            right: 25px;
-            width: 300px;
-            z-index: 5;
-            object-fit: contain;
-        }
-
-        .footer {
-            position: absolute;
-            bottom: 25px;
-            width: 100%;
-            text-align: center;
-            font-size: 14px;
-            color: #666;
-            z-index: 5;
-            font-weight: bold;
-        }
+        .bottom-gifts { position: absolute; bottom: 20px; right: 25px; width: 300px; z-index: 5; }
+        .footer-tag { position: absolute; bottom: 25px; width:100%; text-align: center; font-size: 14px; font-weight: bold; color: #666; }
     </style>
 </head>
 <body>
@@ -292,7 +155,6 @@
 <div class="container">
     <div class="controls">
         <h2>पोस्टर बनाएं</h2>
-        
         <div class="input-group">
             <label>अवसर चुनें (Event Type)</label>
             <select id="templateType" onchange="changeTemplate(this.value)">
@@ -303,84 +165,67 @@
                 <option value="custom">अन्य (Custom)</option>
             </select>
         </div>
-
         <div class="input-group">
             <label id="labelName1">मुख्य नाम (Primary Name)</label>
             <input id="name1" placeholder="Name" oninput="updateMessage()">
         </div>
-
         <div class="input-group" id="name2Group" style="display: none;">
             <label id="labelName2">दूसरा नाम (Secondary Name)</label>
             <input id="name2" placeholder="Name" oninput="updateMessage()">
         </div>
-
         <div class="input-group">
             <label>समर्पण राशि (Amount - ₹)</label>
-            <input type="number" id="inputAmount" value="501" oninput="document.getElementById('displayAmount').innerText=this.value; updateMessage()">
+            <input type="number" id="inputAmount" value="501" oninput="updateAmountDisplay(this.value)">
         </div>
-
         <div class="input-group">
             <label>दिनांक (Date)</label>
             <input type="date" id="inputDate" onchange="updateDate(this.value)">
         </div>
-
         <div class="input-group" id="messageGroup" style="display: none;">
             <label>संदेश (Message)</label>
             <textarea id="messageInput" rows="5" oninput="document.getElementById('messageDisplay').innerText=this.value"></textarea>
         </div>
-
         <div class="input-group">
             <label>फोटो अपलोड करें (Upload Photo)</label>
             <input type="file" accept="image/*" onchange="handlePhotoUpload(event)">
         </div>
-
-        <div class="button-group">
-            <button class="btn btn-download" id="downloadBtn" onclick="downloadPoster()">↓ पोस्टर डाउनलोड करें</button>
-        </div>
+        <button class="btn" id="downloadBtn" onclick="downloadPoster()">↓ स्टेटस डाउनलोड करें</button>
     </div>
 
     <div class="poster-wrapper">
         <div class="poster" id="poster">
-            
             <div class="scallop-h scallop-top"></div>
             <div class="scallop-h scallop-bottom"></div>
             <div class="scallop-v scallop-left"></div>
             <div class="scallop-v scallop-right"></div>
             
             <div class="poster-header">
-                <img src="header1.png" class="header-img left top" alt="">
-                <img src="header3.png" class="header-img left bottom" alt="">
-                
+                <img src="header1.png" class="header-img img-lt">
+                <img src="header3.png" class="header-img img-lb">
                 <div class="header-text">
                     <div class="ganesh">॥ श्री गणेशाय नमः ॥</div>
                     <div class="samiti">पाटेश्वर युवा सेवा समिति</div>
-                    <div class="samiti">ठि. पटली</div>
+                    <div class="samiti" style="font-size:32px; color:#ffda75">ठि. पटली</div>
                 </div>
-                
-                <img src="header2.png" class="header-img right top" alt="">
-                <img src="header4.png" class="header-img right bottom" alt="">
+                <img src="header2.png" class="header-img img-rt">
+                <img src="header4.png" class="header-img img-rb">
             </div>
-
             <div class="scallop-trim"></div>
 
             <div class="content-area">
-                <div class="date">दिनांक: <span id="displayDate"></span></div>
-                <br>
+                <div class="date-box">दिनांक: <span id="displayDate"></span></div>
                 <div class="amount-box">समर्पण राशि: ₹ <span id="displayAmount">501</span></div>
-                
-                <div class="content" id="messageDisplay"></div>
+                <div class="message" id="messageDisplay"></div>
                 
                 <div class="photo-container">
                     <div class="photo-frame">
-                        <div class="photo-placeholder-text">फोटो स्थान<br>(Photo Area)</div>
-                        <img id="displayPhoto" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=" alt="Upload">
+                        <img id="displayPhoto" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=">
                     </div>
                 </div>
             </div>
 
-            <img src="footer-gifts.png" class="bottom-gifts" alt="Gifts and Balloons">
-            
-            <div class="footer">© 2026, Design by NsRao</div>
+            <img src="footer-gifts.png" class="bottom-gifts">
+            <div class="footer-tag">© 2026, Design by NsRao</div>
         </div>
     </div>
 </div>
@@ -388,33 +233,25 @@
 <script>
     let currentTemplate = "self";
 
-    // --- Dynamic Mobile Scaling Logic ---
     function scalePosterForMobile() {
         const wrapper = document.querySelector('.poster-wrapper');
         const poster = document.getElementById('poster');
         const wrapperWidth = wrapper.clientWidth;
-
         if (wrapperWidth < 800 && wrapperWidth > 0) {
             const scaleFactor = wrapperWidth / 800;
             poster.style.transform = `scale(${scaleFactor})`;
-            wrapper.style.height = `${1130 * scaleFactor}px`; 
+            wrapper.style.height = `${1422 * scaleFactor}px`; 
         } else {
             poster.style.transform = 'none';
             wrapper.style.height = 'auto';
         }
     }
-
     window.addEventListener('resize', scalePosterForMobile);
-    
+
     window.onload = () => {
         scalePosterForMobile();
-        
         const today = new Date();
-        const yyyy = today.getFullYear();
-        const mm = String(today.getMonth() + 1).padStart(2, '0');
-        const dd = String(today.getDate()).padStart(2, '0');
-        
-        const formattedDate = `${yyyy}-${mm}-${dd}`;
+        const formattedDate = today.toISOString().split('T')[0];
         document.getElementById("inputDate").value = formattedDate;
         updateDate(formattedDate);
         changeTemplate('self');
@@ -426,28 +263,26 @@
         document.getElementById("displayDate").innerText = `${parts[2]}-${parts[1]}-${parts[0]}`;
     }
 
+    function updateAmountDisplay(val) {
+        document.getElementById('displayAmount').innerText = val;
+        updateMessage();
+    }
+
     function changeTemplate(t) {
         currentTemplate = t;
         const name2Group = document.getElementById("name2Group");
         const labelName1 = document.getElementById("labelName1");
         const labelName2 = document.getElementById("labelName2");
         const messageGroup = document.getElementById("messageGroup");
-
-        if (messageGroup) {
-            messageGroup.style.display = (t === "custom") ? "block" : "none";
-        }
+        if (messageGroup) messageGroup.style.display = (t === "custom") ? "block" : "none";
 
         if (t === "self") {
             name2Group.style.display = "none";
             labelName1.innerText = "व्यक्ति का नाम (Name)";
-        } else if (t === "son") {
+        } else if (t === "son" || t === "daughter") {
             name2Group.style.display = "block";
             labelName1.innerText = "पिता/माता का नाम (Parent's Name)";
-            labelName2.innerText = "पुत्र का नाम (Son's Name)";
-        } else if (t === "daughter") {
-            name2Group.style.display = "block";
-            labelName1.innerText = "पिता/माता का नाम (Parent's Name)";
-            labelName2.innerText = "पुत्री का नाम (Daughter's Name)";
+            labelName2.innerText = (t === "son" ? "पुत्र" : "पुत्री") + " का नाम (Child's Name)";
         } else if (t === "anniversary") {
             name2Group.style.display = "block";
             labelName1.innerText = "पति का नाम (Husband's Name)";
@@ -476,103 +311,66 @@
         } else if (currentTemplate === "custom") {
             text = document.getElementById("messageInput").value;
         }
-
         document.getElementById("messageDisplay").innerText = text;
-        
-        if(currentTemplate !== "custom") {
-            document.getElementById("messageInput").value = text;
-        }
     }
 
     function handlePhotoUpload(event) {
         const file = event.target.files[0];
         if (file) {
             const reader = new FileReader();
-            reader.onload = function(e) {
-                document.getElementById("displayPhoto").src = e.target.result;
-            }
+            reader.onload = (e) => document.getElementById("displayPhoto").src = e.target.result;
             reader.readAsDataURL(file);
         }
     }
 
-    // --- OFF-SCREEN CLONE FIX FOR IPHONE ---
     function downloadPoster() {
         const btn = document.getElementById("downloadBtn");
         const originalText = btn.innerText;
-        
         btn.innerText = "⏳ Generating...";
         btn.disabled = true;
 
-        const originalPoster = document.getElementById("poster");
+        const posterElement = document.getElementById("poster");
+        const wrapperElement = document.querySelector('.poster-wrapper');
+        const originalTransform = posterElement.style.transform;
+        const originalHeight = wrapperElement.style.height;
 
-        // 1. Create a hidden, unscaled clone (Fixes iPhone DOM transform bug)
-        const cloneContainer = document.createElement("div");
-        cloneContainer.style.position = "fixed";
-        cloneContainer.style.top = "-9999px";
-        cloneContainer.style.left = "-9999px";
-        
-        const clone = originalPoster.cloneNode(true);
-        clone.style.transform = "none"; // Strip scaling completely
-        cloneContainer.appendChild(clone);
-        document.body.appendChild(cloneContainer);
+        posterElement.style.transform = 'none';
+        wrapperElement.style.height = 'auto';
 
-        // 2. Render the off-screen clone
-        html2canvas(clone, {
-            scale: 2, 
-            useCORS: true,
-            backgroundColor: "#fdfbf7"
-        }).then(canvas => {
-            // Clean up the DOM
-            document.body.removeChild(cloneContainer);
+        html2canvas(posterElement, { scale: 2, useCORS: true, backgroundColor: "#fdfbf7" }).then(canvas => {
+            posterElement.style.transform = originalTransform;
+            wrapperElement.style.height = originalHeight;
 
-            canvas.toBlob(function(blob) {
-                const url = window.URL.createObjectURL(blob);
-                const file = new File([blob], "Pateshwar_Poster.png", { type: "image/png" });
-
-                // STRICTLY target iOS ONLY for Share API (Fixes Windows PC Bug)
+            canvas.toBlob(blob => {
+                const file = new File([blob], "Pateshwar_Status.png", { type: "image/png" });
                 const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
 
                 if (isIOS && navigator.canShare && navigator.canShare({ files: [file] })) {
-                    navigator.share({
-                        files: [file],
-                        title: 'Pateshwar Samiti Poster',
-                    }).then(() => {
-                        resetButton();
-                    }).catch((error) => {
-                        // User cancelled share
-                        resetButton();
-                    });
+                    navigator.share({ files: [file], title: 'Poster' })
+                    .then(() => resetBtn(btn, originalText))
+                    .catch(() => resetBtn(btn, originalText));
                 } else {
-                    // Standard Direct Download for PC & Android
                     const link = document.createElement("a");
-                    link.href = url;
-                    link.download = "Pateshwar_Samiti_Poster.png";
+                    link.href = window.URL.createObjectURL(blob);
+                    link.download = "Pateshwar_Status.png";
                     document.body.appendChild(link);
                     link.click();
                     document.body.removeChild(link);
-                    
-                    setTimeout(() => window.URL.revokeObjectURL(url), 100);
-                    resetButton();
+                    setTimeout(() => window.URL.revokeObjectURL(link.href), 100);
+                    resetBtn(btn, originalText);
                 }
-
-                function resetButton() {
-                    btn.innerText = originalText;
-                    btn.disabled = false;
-                }
-
             }, 'image/png');
-            
-        }).catch(error => {
-            // Clean up the DOM on error
-            document.body.removeChild(cloneContainer);
-            console.error("Canvas Error:", error);
-            
-            // This will now output the EXACT technical error string from your iPhone
-            alert("Error: " + error.message);
-            
-            btn.innerText = originalText;
-            btn.disabled = false;
+        }).catch(err => {
+            posterElement.style.transform = originalTransform;
+            wrapperElement.style.height = originalHeight;
+            alert("Error: " + err.message);
+            resetBtn(btn, originalText);
         });
+    }
+
+    function resetBtn(btn, text) {
+        btn.innerText = text;
+        btn.disabled = false;
     }
 </script>
 </body>
